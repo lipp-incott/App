@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><title>Trainer Log</title>
+<style>
+:root{--bg:#f6f7f9;--c:#fff;--t:#1b1f24;--m:#6b7280;--a:#2563eb;--b:#e5e7eb;--g:#16a34a}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1115;--c:#181b21;--t:#e8eaee;--m:#98a0ad;--a:#6ea0ff;--b:#2a2f38;--g:#4ade80}}
+*{box-sizing:border-box}body{margin:0;font:15px/1.4 -apple-system,system-ui,sans-serif;background:var(--bg);color:var(--t);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{position:sticky;top:0;background:var(--bg);padding:10px 12px;border-bottom:1px solid var(--b);z-index:5;display:flex;gap:8px;align-items:center}
+header input{flex:1}main{max-width:820px;margin:0 auto;padding:12px}
+input,textarea,select,button{font:inherit;color:inherit;background:var(--c);border:1px solid var(--b);border-radius:8px;padding:8px}
+button{cursor:pointer}button.p{background:var(--a);color:#fff;border-color:var(--a)}
+.card{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:12px;margin:10px 0}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.m{color:var(--m);font-size:13px}.pr{color:var(--g);font-weight:600}
+.xb{border-top:1px solid var(--b);padding:8px 0}
+.ex{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px}
+.ex input,textarea,.w{width:100%;padding:6px}
+summary{cursor:pointer;padding:2px 0}a{color:var(--a);cursor:pointer}h2{margin:6px 0}
+:root{--a:#6d5efc;--bg:#f2f3fb;--b:#e4e6f3;--sh:0 4px 16px rgba(70,70,140,.09)}
+@media(prefers-color-scheme:dark){:root{--a:#8d80ff;--bg:#0d0f18;--c:#161a27;--b:#262b3d;--sh:none}}
+body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+header{flex-wrap:wrap;background:linear-gradient(135deg,#6d5efc,#9b5bff);border:0;color:#fff}
+header input{flex:1 1 100%;border:0;border-radius:12px;background:rgba(255,255,255,.22);color:#fff}
+header input::placeholder{color:#ece9ff}
+.card{border:0;border-radius:16px;box-shadow:var(--sh)}
+button{border-radius:10px;font-weight:600}
+button.p{background:linear-gradient(135deg,#6d5efc,#9b5bff);border:0;color:#fff}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;flex:none}
+.chip{background:var(--bg);border-radius:99px;padding:2px 10px}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;font-size:12px;color:var(--m)}
+.st div{background:var(--c);border-radius:14px;padding:10px;text-align:center;box-shadow:var(--sh)}
+.st b{display:block;font-size:22px;color:var(--a)}
+.xb{background:var(--bg);border:0;border-radius:12px;padding:8px;margin-top:8px}
+.xb input{background:var(--c)}
+.hd{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;font-size:11px;color:var(--m);text-transform:uppercase;margin-top:8px}
+.fab{position:fixed;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:6;border-radius:99px;padding:12px 18px;box-shadow:0 6px 18px rgba(109,94,252,.45)}
+.tmr{position:fixed;left:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:6;background:var(--c);box-shadow:var(--sh);border-radius:99px;padding:8px 14px;font-size:14px;display:flex;gap:10px}.tmr a{font-weight:600}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;background:var(--c);border-top:1px solid var(--b);padding:8px 0 calc(8px + env(safe-area-inset-bottom));z-index:7}
+nav a{display:flex;flex-direction:column;align-items:center;font-size:20px;color:var(--m);min-width:64px}
+.tip{position:absolute;pointer-events:none;opacity:0;background:var(--t);color:var(--bg);padding:6px 10px;border-radius:10px;font-size:12px;transform:translate(-50%,-125%);white-space:nowrap;box-shadow:var(--sh);transition:opacity .1s}.tip b{font-size:15px}
+.toast{position:fixed;left:50%;bottom:calc(140px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--t);color:var(--bg);padding:10px 16px;border-radius:99px;z-index:30;font-size:14px;box-shadow:var(--sh)}
+nav a span{font-size:11px}nav a.on{color:var(--a);font-weight:700}
+</style></head><body>
+<header><div style="font-weight:800;font-size:19px">🏋️ Trainer Log</div><span id="sy" style="flex:1;text-align:right;font-size:11px;opacity:.85"></span><input id="q" type="search" placeholder="Search clients &amp; exercises" oninput="R()"></header>
+<main id="app"></main><div id="tm" class="tmr"></div><nav><a id="n0" onclick="go('home')">👥<span>Clients</span></a><a id="n1" onclick="go('cal')">📅<span>Calendar</span></a><a id="n2" onclick="go('set')">⚙️<span>Settings</span></a></nav><datalist id="exl"></datalist>
+<script>
+const K='trainerlog1',g=i=>document.getElementById(i),uid=()=>Math.random().toString(36).slice(2,9),
+esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10),
+fmt=d=>new Date(d+'T00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}),
+sv=()=>{try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}push()};
+let db,view={t:'home'};try{db=JSON.parse(localStorage.getItem(K))}catch(e){}
+function norm(n){n=n.replace(/[^\x20-\x7e]/g,'').trim().replace(/\s+/g,' ').toLowerCase().replace(/\bdb\b/g,'dumbbell').replace(/\bkb\b/g,'kettlebell').replace(/\brdl\b/g,'romanian deadlift').replace(/^ssb$/,'ssb squat').replace(/(squat|lunge|jump|curl|raise|row|fly|pull|up|hyper)s$/,'$1');return n.replace(/\b\w/g,c=>c.toUpperCase())}
+function parse(t){let name='',S=[],cur,prev=null,roll=0;
+for(let l of t.split(/\r?\n/)){l=l.trim();if(!l)continue;const d=l.match(/^(\d{1,2})\/(\d{1,2})$/);
+if(d){const k=+d[1]*100+ +d[2];if(prev!==null&&k<prev)roll++;prev=k;cur={id:uid(),m:+d[1],d:+d[2],roll,ex:[]};S.push(cur);continue}
+if(!cur){name=name||l;continue}
+const m=l.match(/^(.*?)\s*(\d+)\s*x\s*(\d+(?:-\d+)?(?:\s*(?:secs?|min))?)\s*(.*)$/i);let e;
+if(m){const w=m[4].match(/^(\d+(?:\.\d+)?)\s*(.*)$/);e={n:m[1],s:m[2],r:m[3],w:w?w[1]:'',note:w?w[2]:m[4]}}
+else{const p=l.match(/^([^\d]*?)\s*(\d.*)?$/);e={n:p[1]||l,s:'',r:'',w:'',note:p[2]||''}}
+if(m&&!m[1].trim()&&cur.ex.length){const p=cur.ex.at(-1);p.note=(p.note+' +'+m[2]+'x'+m[3]+(e.w?' @'+e.w:'')).trim();continue}
+e.n=norm(e.n)||'Unnamed';e.rpe='';cur.ex.push(e)}
+const now=new Date(),last=S.at(-1),ey=last&&(last.m*100+last.d>(now.getMonth()+1)*100+now.getDate())?now.getFullYear()-1:now.getFullYear(),tot=last?last.roll:0,p2=n=>String(n).padStart(2,'0');
+S.forEach(s=>{s.date=(ey-(tot-s.roll))+'-'+p2(s.m)+'-'+p2(s.d);delete s.m;delete s.d;delete s.roll});
+S.sort((a,b)=>a.date<b.date?-1:1);
+return{id:uid(),name:name.replace(/\s+pt\.?\s*\d+$/i,'')||'New client',goal:'',inj:'',bw:[],sessions:S}}
+if(!db)db={clients:[],tpl:[]};
+const C=()=>db.clients.find(x=>x.id==view.id),
+exs=()=>new Set(db.clients.flatMap(c=>c.sessions.flatMap(s=>s.ex.map(e=>e.n)))),
+sch=e=>e.sl&&e.sl.length?e.sl.map(x=>(x.w||'BW')+'x'+x.r).join(', ')+(e.rpe?' RPE '+e.rpe:'')+(e.note?' ('+e.note+')':''):(e.s&&e.r?e.s+'x'+e.r:e.r)+(e.w?' @ '+e.w:'')+(e.rpe?' RPE '+e.rpe:'')+(e.note?' ('+e.note+')':''),
+prior=(c,s,n)=>c.sessions.filter(x=>x.date<s.date).flatMap(x=>x.ex.filter(e=>e.n==n).map(e=>({d:x.date,e}))),
+isPR=(c,s,e)=>{const w=+e.w,p=prior(c,s,e.n).map(x=>+x.e.w||0);return w>0&&p.length&&w>Math.max(...p)};
+function go(t,id,n){g('q').value='';view={t,id,n};R();scrollTo(0,0)}
+function R(){const q=g('q').value.trim().toLowerCase();g('exl').innerHTML=[...exs()].sort().map(n=>`<option value="${esc(n)}">`).join('');
+g('n0').className=view.t=='home'?'on':'';g('n2').className=view.t=='set'||view.t=='imp'?'on':'';g('n1').className=view.t=='cal'?'on':'';g('q').placeholder=view.t=='client'?'Search '+((C()||{}).name||'client')+'’s exercises':'Search clients & exercises';g('app').innerHTML=loading?'<p class="m">Loading your clients…</p>':q?srch2(q):({client,ex:exv,imp:impv2,cal,set:setv}[view.t]||homeV)();arrange()}
+function srch(q){const cs=db.clients.filter(c=>c.name.toLowerCase().includes(q)),es=[...exs()].filter(n=>n.toLowerCase().includes(q)).sort();
+return`<h2>Clients</h2>${cs.map(c=>`<div class="card"><a onclick="go('client','${c.id}')">${esc(c.name)}</a></div>`).join('')||'<p class="m">No matches</p>'}<h2>Exercises</h2>${es.map(n=>`<div class="card"><a data-n="${esc(n)}" onclick="go('ex',0,this.dataset.n)">${esc(n)}</a></div>`).join('')||'<p class="m">No matches</p>'}`}
+function home(){return`<div class="row"><button class="p" onclick="addC()">+ Add client</button><button onclick="go('imp')">Import from Notes</button><button onclick="exp()">Backup</button><label class="m">Restore <input type="file" accept=".json" onchange="rest(this)"></label></div>`+
+[...db.clients].sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="card"><a onclick="go('client','${c.id}')"><b>${esc(c.name)}</b></a><div class="m">${c.sessions.length} sessions${c.sessions.length?' · last '+fmt(c.sessions.at(-1).date):''}</div></div>`).join('')}
+function exv(){const r=[];db.clients.filter(c=>!view.id||c.id==view.id).forEach(c=>c.sessions.forEach(s=>s.ex.filter(e=>e.n==view.n).forEach(e=>r.push({c,s,e}))));r.sort((a,b)=>a.s.date<b.s.date?1:-1);
+const best={};r.forEach(x=>{const w=+x.e.w||0;if(w>(best[x.c.name]||0))best[x.c.name]=w});
+return`<h2>${esc(view.n)}</h2>${view.id?`<div class="m"><a onclick="go('client','${view.id}')">‹ ${esc((C()||{}).name)}</a> · <a onclick="go('ex',0,view.n)">Show all clients</a></div>`:''}${spark2(r)}<div class="m">Best: ${Object.entries(best).map(([k,v])=>esc(k)+' '+v).join(' · ')||'no weights logged'}</div>`+r.map(x=>`<div class="card"><b>${fmt(x.s.date)}</b> · <a onclick="go('client','${x.c.id}')">${esc(x.c.name)}</a><br>${esc(sch(x.e))}</div>`).join('')}
+function client(){const c=C();if(!c)return home();const b={};c.sessions.forEach(s=>s.ex.forEach(e=>{const w=+e.w||0;if(w&&(!b[e.n]||w>=b[e.n].w))b[e.n]={w,d:s.date}}));
+const ss=[...c.sessions].reverse(),open=view.open;
+return`<div class="row"><div class="av" style="background:${hue(c.name)}">${esc(c.name[0])}</div><h2 style="flex:1">${esc(c.name)}</h2><button class="p" onclick="addW()">+ Workout</button><a class="m" onclick="delC()">Delete</a></div><div class="st" data-sec="stats"><div><b>${c.sessions.length}</b>sessions</div><div><b>${Object.keys(b).length}</b>lifts tracked</div><div><b>${c.bw.length?c.bw.at(-1).w:'-'}</b>bodyweight</div></div><button class="p fab" onclick="addW()">+ Add workout</button>
+<div class="card" data-sec="profile"><b>Profile</b><textarea rows="2" placeholder="Goals" oninput="C().goal=this.value;sv()">${esc(c.goal)}</textarea><textarea rows="2" placeholder="Injuries / limitations" oninput="C().inj=this.value;sv()" style="margin-top:6px">${esc(c.inj)}</textarea>
+<div class="row"><input id="bw" type="number" step="0.1" placeholder="Bodyweight" style="width:120px"><button onclick="addBW()">Log</button><span class="m">${c.bw.slice(-5).reverse().map(x=>x.w+' ('+fmt(x.d)+')').join(' · ')}</span></div></div>
+${pkgCard(c)}${prog2(c)}<details class="card" data-sec="bests"><summary><b>Personal bests</b></summary>${Object.entries(b).sort().map(([n,v])=>`<div class="m">${esc(n)}: <b>${v.w}</b> (${fmt(v.d)})</div>`).join('')||'<span class="m">None yet</span>'}</details>
+<div class="card" data-sec="new"><b>New session</b><div class="row"><input id="nd" type="date" value="${td()}"><select id="nsrc"><option value="b">Blank</option><option value="last">Copy last session</option>${db.tpl.map((t,i)=>`<option value="t${i}">Template: ${esc(t.name)}</option>`).join('')}</select><button class="p" onclick="newS()">Create</button></div></div>`+
+ss.map((s,i)=>`<details class="card" data-sec="sessions" ${(open?open==s.id:i==0)?'open':''}><summary><b>${fmt(s.date)}</b> <span class="m">${s.ex.length} exercises · vol ${vol(s).toLocaleString()}</span></summary><div class="row"><span class="m">Date</span><input type="date" value="${s.date}" onchange="chgD('${s.id}',this.value)"></div><input class="w" style="margin-top:6px" placeholder="Session note" value="${esc(s.note||'')}" oninput="S_('${s.id}').note=this.value;sv()"><button class="p" style="margin-top:8px" onclick="addE('${s.id}')">+ Exercise</button><div class="hd"><span>Exercise</span><span>Sets</span><span>Reps</span><span>Wt</span><span>RPE</span></div>${s.ex.map((e,j)=>{const p=prior(c,s,e.n).at(-1);return`<div class="xb"><div class="ex"><input list="exl" value="${esc(e.n)}" onchange="ed('${s.id}',${j},'n',this.value)"><input placeholder="Sets" value="${esc(e.s)}" oninput="ed('${s.id}',${j},'s',this.value)" ${e.sl?'readonly':''}><input placeholder="Reps" value="${esc(e.r)}" oninput="ed('${s.id}',${j},'r',this.value)" ${e.sl?'readonly':''}><input placeholder="Wt" value="${esc(e.w)}" oninput="ed('${s.id}',${j},'w',this.value)" ${e.sl?'readonly':''}><input placeholder="RPE" value="${esc(e.rpe)}" oninput="ed('${s.id}',${j},'rpe',this.value)"></div>
+${e.sl?e.sl.map((x,k)=>`<div class="ex" style="grid-template-columns:48px 1fr 1fr 28px;margin-top:4px"><span class="m">Set ${k+1}</span><input placeholder="Reps" value="${esc(x.r)}" oninput="es('${s.id}',${j},${k},'r',this.value)"><input placeholder="Wt" value="${esc(x.w)}" oninput="es('${s.id}',${j},${k},'w',this.value)"><a onclick="rS('${s.id}',${j},${k})">✕</a></div>`).join('')+`<a onclick="aS('${s.id}',${j})">+ set</a>`:''}<input class="w" style="margin-top:4px" placeholder="Notes\" value="${esc(e.note)}" oninput="ed('${s.id}',${j},'note',this.value)"><div class="m">${p?'Last: '+esc(sch(p.e))+' ('+fmt(p.d)+')':'First time logged'} ${isPR(c,s,e)?'<span class="pr">🏆 PR</span>':''} <a onclick="tg('${s.id}',${j})">${e.sl?'summary':'per-set'}</a> · <a onclick="rmE('${s.id}',${j})">remove</a></div></div>`}).join('')}
+<div class="row"><button onclick="addE('${s.id}')">+ Exercise</button><button onclick="share('${s.id}')">Share recap</button><button onclick="saveT('${s.id}')">Save as template</button><button onclick="delS('${s.id}')">Delete session</button></div></details>`).join('')}
+function impv(){return`<h2>Import from Notes</h2><p class="m">Paste one client's note: a name on the first line, then dates like 04/25 followed by exercises like "Squat 3x5 115". Years are worked out from the order of the dates, ending with the most recent.</p><input id="inm" class="w" placeholder="Client name (optional, otherwise first line)"><textarea id="it" rows="14" placeholder="Paste note here" style="margin-top:6px"></textarea><div class="row"><button class="p" onclick="doImp()">Import</button></div>`}
+const S_=id=>C().sessions.find(s=>s.id==id);
+function ed(id,j,k,v){S_(id).ex[j][k]=k=='n'?norm(v):v;sv()}
+function addE(id){S_(id).ex.push({n:'',s:'',r:'',w:'',rpe:'',note:''});view.open=id;sv();R();setTimeout(()=>{const l=document.querySelectorAll('details[open] input[list]');if(l.length)l[l.length-1].focus()},60)}
+function rmE(id,j){S_(id).ex.splice(j,1);view.open=id;sv();R()}
+function delS(id){ask('Delete this session?',null,()=>{const c=C();c.sessions=c.sessions.filter(s=>s.id!=id);sv();R()})}
+function delC(){ask('Delete this client and all their sessions?',null,()=>{db.clients=db.clients.filter(c=>c.id!=view.id);sv();go('home')})}
+function addC(){ask('Client name','',n=>{const c={id:uid(),name:n,goal:'',inj:'',bw:[],sessions:[]};db.clients.push(c);sv();go('client',c.id);toast('Client added')})}
+function addBW(){const v=g('bw').value;if(v){C().bw.push({d:td(),w:v});sv();R()}}
+function saveT(id){ask('Template name','',n=>{db.tpl.push({name:n,ex:S_(id).ex.map(e=>({n:e.n,s:e.s,r:e.r,w:e.w}))});sv();R()})}
+function newS(){const c=C(),v=g('nsrc').value,cp=a=>a.map(e=>({n:e.n,s:e.s,r:e.r,w:e.w,rpe:'',note:''}));let ex=[];
+if(v=='last'&&c.sessions.length)ex=cp(c.sessions.at(-1).ex);else if(v[0]=='t')ex=cp(db.tpl[+v.slice(1)].ex);
+const s={id:uid(),date:g('nd').value||td(),ex};c.sessions.push(s);c.sessions.sort((a,b)=>a.date<b.date?-1:1);view.open=s.id;sv();R()}
+function doImp(){const t=g('it').value;if(!t.trim())return;const c=parse(t),n=g('inm').value.trim();if(n)c.name=n;db.clients.push(c);sv();go('client',c.id)}
+async function exp0(){const f=new File([JSON.stringify(db)],'trainer-log-backup-'+td()+'.json',{type:'application/json'});try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(x){return}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,1)],{type:'application/json'}));a.download='trainer-log-backup-'+td()+'.json';a.click()}
+function rest(i){const f=i.files[0];if(f)f.text().then(t=>{try{const d=JSON.parse(t);if(d.clients)ask('Replace all current data with this backup?',null,()=>{db=d;sv();go('home')})}catch(e){ask('That is not a valid backup file',null,()=>{})}})}
+const hue=n=>`hsl(${[...n].reduce((a,c)=>a+c.charCodeAt(0),0)*47%360} 60% 50%)`,vol=s=>s.ex.reduce((a,e)=>a+(e.sl?e.sl.reduce((b,x)=>b+(parseInt(x.r)||0)*(+x.w||0),0):(+e.s||0)*(parseInt(e.r)||0)*(+e.w||0)),0);
+function home(){return`<div class="row"><b style="font-size:24px;flex:1">Clients</b><button class="p" onclick="addC()">+ New</button></div>`+(db.clients.length?[...db.clients].sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<div class="card row" onclick="go('client','${c.id}')" style="cursor:pointer"><div class="av" style="background:${hue(c.name)}">${esc(c.name[0])}</div><div style="flex:1"><b>${esc(c.name)}</b><div class="m">${c.sessions.length} sessions${c.sessions.length?' · last '+fmt(c.sessions.at(-1).date):''}</div></div><span class="chip">›</span></div>`).join(''):'<p class="m">No clients yet. Tap + New, or Import from Notes below.</p>')+`<p class="m" style="display:none"><label>Restore a backup: <input type="file" accept=".json" onchange="rest(this)"></label></p>`}
+function spark(r){const p=[...r].reverse().map(x=>+x.e.w).filter(w=>w>0);if(p.length<2)return'';const mx=Math.max(...p),mn=Math.min(...p),W=300,H=70,pt=p.map((w,i)=>(i/(p.length-1)*W).toFixed(1)+','+(H-6-(mx==mn?.5:(w-mn)/(mx-mn))*(H-12)).toFixed(1)).join(' ');return`<div class="card"><div class="m">Weight over time, oldest to newest</div><svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}"><polyline points="${pt}" fill="none" stroke="var(--a)" stroke-width="2.5" stroke-linejoin="round"/></svg></div>`}
+function logToday(){const c=C();let s=c.sessions.find(x=>x.date==td());if(!s){s={id:uid(),date:td(),ex:(c.sessions.at(-1)?.ex||[]).map(e=>({n:e.n,s:e.s,r:e.r,w:e.w,rpe:'',note:''}))};c.sessions.push(s);sv()}view.open=s.id;R()}
+function sy(e){if(!e.sl)return;e.s=String(e.sl.length);const r=e.sl.map(x=>x.r).filter(Boolean);e.r=r.length&&r.every(x=>x==r[0])?r[0]:r.join('/');e.w=String(Math.max(0,...e.sl.map(x=>+x.w||0))||'')}
+function tg(id,j){const e=S_(id).ex[j];if(e.sl)delete e.sl;else{e.sl=Array.from({length:+e.s||1},()=>({r:e.r,w:e.w}));sy(e)}view.open=id;sv();R()}
+function es(id,j,k,f,v){const e=S_(id).ex[j];e.sl[k][f]=v;sy(e);sv()}
+function aS(id,j){const e=S_(id).ex[j];e.sl.push({...(e.sl.at(-1)||{r:'',w:''})});sy(e);view.open=id;sv();R()}
+function rS(id,j,k){const e=S_(id).ex[j];e.sl.splice(k,1);sy(e);view.open=id;sv();R()}
+function share(id){const c=C(),s=S_(id),t=c.name+' - '+fmt(s.date)+'\n'+s.ex.map(e=>'• '+e.n+': '+sch(e)+(isPR(c,s,e)?' 🏆 PR':'')).join('\n');if(navigator.share)navigator.share({text:t}).catch(()=>{});else navigator.clipboard.writeText(t).then(()=>ask('Recap copied to clipboard',null,()=>{}))}
+function pkgCard(c){const u=c.pk?c.sessions.filter(s=>s.date>=c.pk.from).length:0,l=c.pk?c.pk.n-u:0;return`<div class="card" data-sec="package"><b>Package</b> <span class="${c.pk&&l<=1?'':'m'}" ${c.pk&&l<=1?'style="color:#e5484d;font-weight:600"':''}>${c.pk?l+' of '+c.pk.n+' left (since '+fmt(c.pk.from)+')':'none set'}</span><div class="row"><button onclick="pkg()">New package</button><button onclick="C().ns=(C().ns||0)+1;sv();R()">No-shows: ${c.ns||0} (+1)</button></div></div>`}
+function pkg(){ask('Sessions in the new package','10',v=>{const n=+v;if(n>0){C().pk={n,from:td()};sv();R()}})}
+function ln(p){if(p.length<2)return'<div class="m">Not enough data yet</div>';const mx=Math.max(...p),mn=Math.min(...p),W=300,H=70;return`<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}"><polyline points="${p.map((w,i)=>(i/(p.length-1)*W).toFixed(1)+','+(H-6-(mx==mn?.5:(w-mn)/(mx-mn))*(H-12)).toFixed(1)).join(' ')}" fill="none" stroke="var(--a)" stroke-width="2.5" stroke-linejoin="round"/></svg><div class="m">${mn} to ${mx}</div>`}
+function prog(c){const ns=[...new Set(c.sessions.flatMap(s=>s.ex.filter(e=>+e.w).map(e=>e.n)))].sort();if(!ns.length)return'';const n=ns.includes(view.cx)?view.cx:ns[0],p=c.sessions.flatMap(s=>s.ex.filter(e=>e.n==n&&+e.w).map(e=>+e.w));return`<details class="card" data-sec="progress" ${view.cx?'open':''}><summary><b>Progress charts</b></summary><select onchange="view.cx=this.value;R()">${ns.map(x=>`<option ${x==n?'selected':''}>${esc(x)}</option>`).join('')}</select>${ln(p)}<div class="m" style="margin-top:8px">Bodyweight</div>${ln(c.bw.map(x=>+x.w))}</details>`}
+function cal(){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)+(view.wk||0)*7);let h=`<div class="row"><button onclick="wk(-1)">‹</button><b style="flex:1;text-align:center">Week of ${d.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</b><button onclick="wk(1)">›</button></div>`;
+for(let i=0;i<7;i++){const x=new Date(d);x.setDate(d.getDate()+i);const k=x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0'),ss=db.clients.flatMap(c=>c.sessions.filter(s=>s.date==k).map(s=>({c,s})));
+h+=`<div class="card"><b>${x.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</b>${k==td()?' <span class="chip">Today</span>':''}${ss.map(y=>`<div class="row" onclick="go('client','${y.c.id}')" style="cursor:pointer"><div class="av" style="width:28px;height:28px;font-size:13px;background:${hue(y.c.name)}">${esc(y.c.name[0])}</div>${esc(y.c.name)} <span class="m">${y.s.ex.length?y.s.ex.length+' exercises':'scheduled'}</span></div>`).join('')||'<div class="m">Nothing scheduled</div>'}</div>`}return h}
+function wk(n){view.wk=(view.wk||0)+n;R()}
+let tm=0,ti;const tmB=()=>g('tm').innerHTML='⏱ <a onclick="rt(60)">60s</a><a onclick="rt(90)">90s</a><a onclick="rt(120)">2m</a>';
+function rt(n){clearInterval(ti);tm=n;tk();ti=setInterval(tk,1000)}
+function tk(){if(tm<=0){clearInterval(ti);g('tm').innerHTML='<b class="pr">Go! 💪</b>';try{navigator.vibrate([300,100,300])}catch(x){}setTimeout(tmB,4000);return}g('tm').innerHTML='⏱ <b>'+tm+'s</b> <a onclick="clearInterval(ti);tmB()">stop</a>';tm--}
+function chgD(id,v){if(!v)return;const c=C();S_(id).date=v;c.sessions.sort((a,b)=>a.date<b.date?-1:1);view.open=id;sv();R()}
+function ask(msg,def,cb){const m=document.createElement('div');m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:grid;place-items:center;padding:20px';m.innerHTML=`<div class="card" style="width:100%;max-width:340px"><b>${esc(msg)}</b>${def===null?'':`<input id="mi" class="w" style="margin-top:10px" value="${esc(def)}">`}<div class="row" style="justify-content:flex-end"><button id="mx">Cancel</button><button class="p" id="mo">OK</button></div></div>`;document.body.appendChild(m);const i=g('mi');if(i){i.focus();i.onkeydown=e=>{if(e.key=='Enter')g('mo').click()}}g('mx').onclick=()=>m.remove();g('mo').onclick=()=>{const v=i?i.value.trim():true;m.remove();if(v)cb(v)}}
+function parseN(t,EY){let name='',S=[],cur,pm=null,roll=0,yr=0;
+for(let l of t.split(/\r?\n/)){l=l.trim();if(!l||/@/.test(l))continue;
+const y=l.match(/^(20\d\d)$/);if(y){yr=+y[1];continue}
+const d=l.match(/^(\d{1,2})\s*\/+\s*(\d{1,2})?(?!\d)\s*(.*)$/);
+if(d){const m=+d[1];if(pm!==null&&m<pm)roll++;pm=m;cur={id:uid(),m,d:+d[2]||1,roll,yr,note:d[3].trim(),ex:[]};S.push(cur);continue}
+if(!cur){name=name||l;continue}
+const m=l.match(/^(.*?)\s*(\d+)\s*[x×]\s*(\d+(?:-\d+)?(?:\s*(?:secs?|min))?)\s*(.*)$/i);let e;
+if(m){const w=m[4].match(/^(\d+(?:\.\d+)?)\s*(.*)$/);e={n:m[1],s:m[2],r:m[3],w:w?w[1]:'',note:w?w[2]:m[4]}}
+else if(/^(day|week)\s*\d/i.test(l)||(!/\d/.test(l)&&(/^[a-z]/.test(l)||l.split(/\s+/).length>=5||/[.,;:!?\[\]()'’]/.test(l)))){const p=cur.ex.at(-1);if(p&&!/^(day|week)/i.test(l))p.note=(p.note+' '+l).trim();else cur.note=(cur.note+' '+l).trim();continue}
+else{const p=l.match(/^([^\d]*?)\s*(\d.*)?$/);e={n:p[1]||l,s:'',r:'',w:'',note:p[2]||''}}
+if(m&&!m[1].trim()&&cur.ex.length){const p=cur.ex.at(-1);p.note=(p.note+' +'+m[2]+'x'+m[3]+(e.w?' @'+e.w:'')).trim();continue}
+e.n=norm(e.n)||'Unnamed';e.rpe='';cur.ex.push(e)}
+const A=S.find(x=>x.yr),now=new Date(),L=S.at(-1),ey=EY||(L&&L.m*100+L.d>(now.getMonth()+1)*100+now.getDate()?now.getFullYear()-1:now.getFullYear()),p2=n=>String(n).padStart(2,'0');
+S.forEach(x=>{x.date=(A?A.yr+x.roll-A.roll:ey+x.roll-(L?L.roll:0))+'-'+p2(x.m)+'-'+p2(x.d);['m','d','roll','yr'].forEach(k=>delete x[k])});
+S.sort((a,b)=>a.date<b.date?-1:1);
+return{id:uid(),name:name.replace(/\s+pt\.?\s*\d+$/i,'')||'New client',goal:'',inj:'',bw:[],sessions:S}}
+function impv2(){return`<h2>Import from Notes</h2><p class="m">Paste one client's note. A line starting with a date like 04/25 begins a session. Years are worked out from the order (a month that wraps past December starts a new year), ending at the most recent date unless you enter the year of the last entry below. A line with just a year like 2026 also works.</p><input id="inm" class="w" placeholder="Client name (optional)"><div class="row"><select id="im"><option value="">Add as a new client</option>${db.clients.map(c=>`<option value="${c.id}">Add to: ${esc(c.name)}</option>`).join('')}</select><input id="iy" type="number" placeholder="Year of last entry (optional)" style="flex:1;min-width:150px"></div><textarea id="it" rows="14" placeholder="Paste note here" style="margin-top:6px"></textarea><div class="row"><button class="p" onclick="doImp2()">Import</button></div>`}
+function doImp2(){const t=g('it').value;if(!t.trim())return;const c=parseN(t,+g('iy').value||0),n=g('inm').value.trim(),m=g('im').value;
+if(m){const x=db.clients.find(z=>z.id==m);x.sessions.push(...c.sessions);x.sessions.sort((a,b)=>a.date<b.date?-1:1);sv();go('client',m);return}
+if(n)c.name=n;db.clients.push(c);sv();go('client',c.id)}
+let col=null,ready=false,sent={},tid;const stat=t=>{const e=g('sy');if(e)e.textContent=t};
+async function initSync(){try{const[d,u]=await Promise.all([claude.use('db'),claude.use('user')]);if(!d||!u)throw 0;col=d.collection('data/users/'+await u.id());
+const snap=await Promise.race([col.get(),new Promise((_,j)=>setTimeout(()=>j(0),10000))]);
+if(snap.size){const cl=[];let tp=[];snap.docs.forEach(x=>{const v=x.data();if(x.id=='tpl'){tp=JSON.parse(JSON.stringify(v.list||[]));sent.tpl=JSON.stringify(tp)}else if(x.id=='prefs'){pref={...pref,...JSON.parse(JSON.stringify(v))};sent.prefs=JSON.stringify(pref)}else if(x.id.startsWith('c_')){cl.push(JSON.parse(JSON.stringify(v)));sent[v.id]=JSON.stringify(v)}});db={clients:cl,tpl:tp};try{localStorage.setItem(K,JSON.stringify(db))}catch(e){}}
+ready=true;loading=false;R();if(!snap.size&&(db.clients.length||db.tpl.length))push();else stat('Saved to your account')}catch(e){loading=false;R();stat('Not synced: saved in this browser only')}}
+function push(){if(!col||!ready)return;clearTimeout(tid);stat('Saving…');tid=setTimeout(async()=>{try{for(const c of db.clients){const t=JSON.stringify(c);if(sent[c.id]!==t){await col.doc('c_'+c.id).set(JSON.parse(t));sent[c.id]=t}}
+for(const k of Object.keys(sent))if(k!='tpl'&&k!='prefs'&&!db.clients.some(c=>c.id==k)){await col.doc('c_'+k).delete();delete sent[k]}
+const t=JSON.stringify(db.tpl);if(sent.tpl!==t){await col.doc('tpl').set({list:db.tpl});sent.tpl=t}const pf=JSON.stringify(pref);if(sent.prefs!==pf){await col.doc('prefs').set(JSON.parse(pf));sent.prefs=pf}stat('Saved to your account')}catch(e){stat('Save failed: '+((e&&e.message)||'error'))}},700)}
+async function exp(){const j=JSON.stringify(db,null,1),f='trainer-log-backup-'+td()+'.json';try{const dl=window.claude&&await claude.use('downloads');if(dl){await dl.save({filename:f,data:j});return}}catch(e){if(e&&e.code=='declined')return}exp0()}
+function srch2(q){const sc=view.t=='client'||(view.t=='ex'&&view.id)?C():null,cs=sc?[]:db.clients.filter(c=>c.name.toLowerCase().includes(q)),es=[...new Set((sc?[sc]:db.clients).flatMap(c=>c.sessions.flatMap(s=>s.ex.map(e=>e.n))))].filter(n=>n.toLowerCase().includes(q)).sort();
+return(sc?`<div class="m">Searching only ${esc(sc.name)}’s exercises · <a onclick="go('home')">search all clients</a></div>`:`<h2>Clients</h2>${cs.map(c=>`<div class="card"><a onclick="go('client','${c.id}')">${esc(c.name)}</a></div>`).join('')||'<p class="m">No matches</p>'}`)+`<h2>Exercises</h2>${es.map(n=>`<div class="card"><a data-n="${esc(n)}" onclick="go('ex',${sc?"'"+sc.id+"'":0},this.dataset.n)">${esc(n)}</a></div>`).join('')||'<p class="m">No matches</p>'}`}
+const CH={};
+function dayMax(a){const m=new Map();a.forEach(x=>{const o=m.get(x.d);if(!o||x.v>o.v)m.set(x.d,x)});return[...m.values()].sort((a,b)=>a.d<b.d?-1:1)}
+function chart(P){if(P.length<2)return'<div class="m">Not enough data yet</div>';const id='c'+uid(),W=320,H=160,L=36,RR=12,T=14,B=24,vs=P.map(p=>p.v),mn=Math.min(...vs),mx=Math.max(...vs),rg=mx-mn||1,X=i=>L+i/(P.length-1)*(W-L-RR),Y=v=>T+(1-(v-mn)/rg)*(H-T-B);CH[id]={P,X,Y,W,H};
+const pts=P.map((p,i)=>X(i).toFixed(1)+','+Y(p.v).toFixed(1)).join(' '),
+gl=[mn,(mn+mx)/2,mx].map(v=>`<line x1="${L}" x2="${W-RR}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--b)"/><text x="${L-5}" y="${Y(v)+4}" text-anchor="end" font-size="10" style="fill:var(--m)">${+v.toFixed(1)}</text>`).join(''),
+dl=[0,P.length-1].map(i=>`<text x="${X(i)}" y="${H-6}" text-anchor="${i?'end':'start'}" font-size="10" style="fill:var(--m)">${fmt(P[i].d)}</text>`).join('');
+return`<div style="position:relative"><svg viewBox="0 0 ${W} ${H}" width="100%" style="touch-action:pan-y;display:block" onpointermove="hv(event,'${id}')" onpointerdown="hv(event,'${id}')" onpointerleave="hx('${id}')"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--a);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--a);stop-opacity:0"/></linearGradient></defs>${gl}${dl}<polygon points="${L},${H-B} ${pts} ${X(P.length-1)},${H-B}" fill="url(#${id}g)"/><polyline points="${pts}" fill="none" style="stroke:var(--a)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${P.length<=40?P.map((p,i)=>`<circle cx="${X(i)}" cy="${Y(p.v)}" r="2.5" style="fill:var(--a)"/>`).join(''):''}<line id="${id}l" y1="${T}" y2="${H-B}" style="stroke:var(--m);opacity:0" stroke-dasharray="3"/><circle id="${id}m" r="5" style="fill:var(--a);stroke:var(--c);opacity:0" stroke-width="2"/></svg><div id="${id}t" class="tip"></div></div>`}
+function hv(e,id){const c=CH[id],r=e.currentTarget.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*c.W;let b=0;c.P.forEach((p,i)=>{if(Math.abs(c.X(i)-x)<Math.abs(c.X(b)-x))b=i});const p=c.P[b],m=g(id+'m'),l=g(id+'l'),t=g(id+'t');
+m.setAttribute('cx',c.X(b));m.setAttribute('cy',c.Y(p.v));m.style.opacity=1;l.setAttribute('x1',c.X(b));l.setAttribute('x2',c.X(b));l.style.opacity=1;
+t.innerHTML='<b>'+esc(p.v)+'</b><br>'+fmt(p.d)+(p.l?'<br><span style="opacity:.8">'+esc(p.l)+'</span>':'');t.style.left=Math.min(Math.max(c.X(b)/c.W*100,16),84)+'%';t.style.top=(c.Y(p.v)/c.H*100)+'%';t.style.opacity=1}
+function hx(id){['m','l','t'].forEach(k=>{const e=g(id+k);if(e)e.style.opacity=0})}
+function spark2(r){const P=dayMax(r.filter(x=>+x.e.w>0).map(x=>({d:x.s.date,v:+x.e.w,l:x.c.name+': '+sch(x.e)})));return P.length<2?'':`<div class="card"><div class="m">Weight over time (best each day). Hover or drag over the chart for details.</div>${chart(P)}</div>`}
+function prog2(c){const ns=[...new Set(c.sessions.flatMap(s=>s.ex.filter(e=>+e.w).map(e=>e.n)))].sort();if(!ns.length&&c.bw.length<2)return'';const n=ns.includes(view.cx)?view.cx:ns[0],P=dayMax(c.sessions.flatMap(s=>s.ex.filter(e=>e.n==n&&+e.w>0).map(e=>({d:s.date,v:+e.w,l:sch(e)})))),B=c.bw.map(x=>({d:x.d,v:+x.w})).filter(x=>x.v);
+return`<details class="card" data-sec="progress" ${view.cx?'open':''}><summary><b>Progress charts</b></summary>${ns.length?`<select onchange="view.cx=this.value;R()">${ns.map(x=>`<option ${x==n?'selected':''}>${esc(x)}</option>`).join('')}</select>${chart(P)}`:''}<div class="m" style="margin-top:8px">Bodyweight</div>${chart(B)}</details>`}
+let pref={s:'name',v:'list'};try{pref=JSON.parse(localStorage.getItem('tlp'))||pref}catch(e){}
+function setP(k,v){pref[k]=v;try{localStorage.setItem('tlp',JSON.stringify(pref))}catch(e){}sv();R()}
+function homeV(){const cs=[...db.clients],la=c=>c.sessions.length?c.sessions.at(-1).date:'',gd=pref.v=='grid';
+cs.sort(pref.s=='za'?(a,b)=>b.name.localeCompare(a.name):pref.s=='recent'?(a,b)=>la(b).localeCompare(la(a)):pref.s=='stale'?(a,b)=>la(a).localeCompare(la(b)):pref.s=='first'?(a,b)=>(a.sessions[0]?.date||'9').localeCompare(b.sessions[0]?.date||'9'):pref.s=='most'?(a,b)=>b.sessions.length-a.sessions.length:(a,b)=>a.name.localeCompare(b.name));
+const card=c=>gd?`<div class="card" onclick="go('client','${c.id}')" style="text-align:center;cursor:pointer;margin:0"><div class="av" style="background:${hue(c.name)};margin:0 auto 6px">${esc(c.name[0])}</div><b>${esc(c.name)}</b><div class="m">${c.sessions.length} sessions</div><div class="m">${c.sessions.length?'Last '+fmt(la(c)):'No sessions yet'}</div></div>`:`<div class="card row" onclick="go('client','${c.id}')" style="cursor:pointer"><div class="av" style="background:${hue(c.name)}">${esc(c.name[0])}</div><div style="flex:1"><b>${esc(c.name)}</b><div class="m">${c.sessions.length} sessions${c.sessions.length?' · last '+fmt(la(c)):''}</div></div><span class="chip">›</span></div>`;
+return`<div class="row"><b style="font-size:24px;flex:1">Clients</b><button class="p" onclick="addC()">+ New</button></div><div style="display:none"><select onchange="setP('s',this.value)">${[['name','Name A–Z'],['za','Name Z–A'],['recent','Most recent session'],['stale','Longest since last session'],['first','Date started'],['most','Most sessions']].map(([k,t])=>`<option value="${k}" ${pref.s==k?'selected':''}>${t}</option>`).join('')}</select><button ${gd?'':'class="p"'} onclick="setP('v','list')">☰ List</button><button ${gd?'class="p"':''} onclick="setP('v','grid')">▦ Grid</button></div><div style="${gd?'display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px':''}">${cs.map(card).join('')}</div>${cs.length?'':'<p class="m">No clients yet. Tap + New, or Import from Notes.</p>'}<p class="m" style="display:none"><label>Restore a backup: <input type="file" accept=".json" onchange="rest(this)"></label></p>`}
+function mkS(d,v){const c=C(),cp=a=>a.map(e=>({n:e.n,s:e.s,r:e.r,w:e.w,rpe:'',note:''}));let ex=[];if(v=='last'&&c.sessions.length)ex=cp(c.sessions.at(-1).ex);else if(v[0]=='t')ex=cp(db.tpl[+v.slice(1)].ex);
+if(!ex.length)ex.push({n:'',s:'',r:'',w:'',rpe:'',note:''});const s={id:uid(),date:d||td(),ex};c.sessions.push(s);c.sessions.sort((a,b)=>a.date<b.date?-1:1);view.open=s.id;sv();R();toast('Workout added for '+fmt(s.date));setTimeout(()=>{const e=document.querySelector('details[open] input[list]');if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.focus()}},80)}
+function addW(){const m=document.createElement('div');m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:grid;place-items:center;padding:20px';
+m.innerHTML=`<div class="card" style="width:100%;max-width:340px"><b>Add workout</b><div class="row"><input id="wd" type="date" value="${td()}" class="w"><select id="ws" class="w"><option value="b">Blank</option><option value="last">Copy last workout</option>${db.tpl.map((t,i)=>`<option value="t${i}">Template: ${esc(t.name)}</option>`).join('')}</select></div><div class="row" style="justify-content:flex-end"><button id="wx">Cancel</button><button class="p" id="wo">Add</button></div></div>`;
+document.body.appendChild(m);g('wx').onclick=()=>m.remove();g('wo').onclick=()=>{const d=g('wd').value,v=g('ws').value;m.remove();mkS(d,v)}}
+const DEF=['stats','profile','package','progress','bests','new','sessions'],LBL={stats:'Summary tiles',profile:'Profile',package:'Package',progress:'Progress charts',bests:'Personal bests',new:'New session',sessions:'Workout history'},SORTS=[['name','Name A–Z'],['za','Name Z–A'],['recent','Most recent session'],['stale','Longest since last session'],['first','Date started'],['most','Most sessions']];
+const ord=()=>[...(pref.order||[]).filter(k=>DEF.includes(k)),...DEF.filter(k=>!(pref.order||[]).includes(k))];
+function mv(i,d){const o=ord(),j=i+d;if(j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];setP('order',o)}
+function hid(k){const h=new Set(pref.hide||[]);h.has(k)?h.delete(k):h.add(k);setP('hide',[...h])}
+function arrange(){if(view.t!='client'||g('q').value.trim())return;const a=g('app'),all=[...a.querySelectorAll(':scope>[data-sec]')],h=pref.hide||[],f=document.createDocumentFragment();ord().forEach(k=>all.filter(e=>e.dataset.sec==k).forEach(e=>{if(h.includes(k))e.remove();else f.appendChild(e)}));a.appendChild(f)}
+function setv(){const o=ord(),h=pref.hide||[],gd=pref.v=='grid';
+return`<h2>Settings</h2><div class="card"><b>Clients screen</b><div class="row"><span class="m" style="width:60px">Layout</span><button ${gd?'':'class="p"'} onclick="setP('v','list')">☰ List</button><button ${gd?'class="p"':''} onclick="setP('v','grid')">▦ Grid</button></div><div class="row"><span class="m" style="width:60px">Sort by</span><select onchange="setP('s',this.value)">${SORTS.map(([k,t])=>`<option value="${k}" ${pref.s==k?'selected':''}>${t}</option>`).join('')}</select></div></div>
+<div class="card"><b>Client page layout</b><div class="m">Use the arrows to reorder sections and the checkboxes to show or hide them.</div>${o.map((k,i)=>`<div class="row"><input type="checkbox" style="width:22px;height:22px;padding:0" ${h.includes(k)?'':'checked'} onchange="hid('${k}')"><span style="flex:1">${LBL[k]}</span><button onclick="mv(${i},-1)">▲</button><button onclick="mv(${i},1)">▼</button></div>`).join('')}<div class="row"><button onclick="setP('order',DEF.slice());setP('hide',[])">Reset to default</button></div></div>
+<div class="card"><b>Clients and data</b><div class="row"><button onclick="addC()">+ Add client</button><button onclick="go('imp')">Import from Notes</button><button onclick="exp()">Backup</button></div><p class="m">Restore a backup: <input type="file" accept=".json" onchange="rest(this)"></p></div>`}
+let loading=!!window.claude;
+function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2200)}
+tmB();R();initSync();
+</script></body></html>
